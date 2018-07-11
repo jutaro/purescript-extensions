@@ -25,16 +25,17 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-arrays": "^4.2.0",
-    "purescript-integers": "^3.1.0",
+    "purescript-prelude": "^4.0.1",
+    "purescript-arrays": "^5.0.0",
+    "purescript-integers": "^4.0.0",
     "purescript-math": "^2.1.0",
-    "purescript-lists": "^4.10.0",
-    "purescript-tailrec": "^3.3.0",
-    "purescript-foreign-clone": "^0.0.1",
-    "purescript-partial": "^1.2.1",
-    "purescript-js-date": "^5.1.0"
+    "purescript-lists": "^5.0.0",
+    "purescript-foreign": "^5.0.0",
+    "purescript-partial": "^2.0.0",
+    "purescript-js-date": "^6.0.0",
+    "purescript-effect": "^2.0.0"
   },
   "resolutions": {
-    "purescript-js-date": "^5.1.0"
+    "purescript-js-date": "^6.0.0"
   }
 }
