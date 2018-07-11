@@ -12,14 +12,16 @@
 module Extensions where
 
 import Prelude
-import Control.Monad.Eff (kind Effect, Eff)
+-- import Control.Monad.Eff (kind Effect, Eff)
+import Effect (Effect)
 import Data.Array (length, range, unsafeIndex)
 import Data.List (List(..))
-import Data.Traversable (sequence)
+import Data.Traversable (sequence) --???
 import Math (floor)
 import Partial.Unsafe (unsafePartial)
 import Data.JSDate(JSDate)
-import Data.CForeign (Foreign)
+-- import Data.CForeign (Foreign)
+import Foreign (Foreign)
 
 
 infixl 2 bindConst as >>
@@ -62,12 +64,13 @@ listReplicate n value = go n Nil
   go n' rest | n' <= 0 = rest
              | otherwise = go (n' - 1) (Cons value rest)
 
-foreign import data TIMEOUT :: Effect
+-- foreign import data TIMEOUT :: EffectKind
+-- foreign import kind EffectKind
 
-foreign import timeout :: forall eff a.
+foreign import timeout :: forall  a.
                                Int ->
-                               Eff eff a ->
-                               Eff eff Unit
+                               Effect a ->
+                               Effect Unit
 
 -- Throws an error
 foreign import fail :: forall a . String -> a
@@ -101,31 +104,31 @@ data LogLevel =
     | Error
     | Fatal
 
-logA :: forall eff. String -> Eff eff Unit
+logA ::  String -> Effect Unit
 logA str = logAny Trace str \_ -> pure unit
 
 log :: forall a. String -> (Unit -> a) -> a
 log = logAny Trace
 
-logA' :: forall eff. LogLevel -> String -> Eff eff Unit
+logA' :: LogLevel -> String -> Effect Unit
 logA' logLevel str = logAny logLevel str \_ -> pure unit
 
 log' :: forall a. LogLevel -> String -> (Unit -> a) -> a
 log' = logAny
 
 -- | Map with effects over an array of values.
-foreign import mapE :: forall a b e. (a -> Eff e b) -> Array a -> Eff e (Array b)
+foreign import mapE :: forall a b. (a -> Effect b) -> Array a -> Effect (Array b)
 
 -- | Map with effects over an array of values. Doesn't return a value
-foreign import mapE_ :: forall a e. (a -> Eff e Unit) -> Array a -> Eff e Unit
+foreign import mapE_ :: forall a. (a -> Effect Unit) -> Array a -> Effect Unit
 
 -- | Map with effects over an array of values. Calls a break function on every iteration with the index.
 -- If the braek function returns true, the computation will be stopped.
-foreign import mapEBreak :: forall a b e. (a -> Eff e b) -> (Int -> Eff e Boolean) -> Array a -> Eff e (Array b)
+foreign import mapEBreak :: forall a b. (a -> Effect b) -> (Int -> Effect Boolean) -> Array a -> Effect (Array b)
 
 -- | Map with effects over an array of values. Calls a break function on every iteration with the index.
 -- If the braek function returns true, the computation will be stopped. Doesn't return a value
-foreign import mapEBreak_ :: forall a e. (a -> Eff e Unit) -> (Int -> Eff e Boolean) -> Array a -> Eff e Unit
+foreign import mapEBreak_ :: forall a. (a -> Effect Unit) -> (Int -> Effect Boolean) -> Array a -> Effect Unit
 
 -- | Create an array with repeated instances of a value.
 foreign import replicate :: forall a. Int -> a -> Array a
@@ -133,8 +136,9 @@ foreign import replicate :: forall a. Int -> a -> Array a
 -- Should go to: Graphics.Canvas
 foreign import data Image :: Type
 
-foreign import alert :: forall eff. String -> Eff eff Unit
+foreign import alert :: String -> Effect Unit
 
 foreign import logAny :: forall a s. LogLevel -> s -> (Unit -> a) -> a
 
 foreign import stringify :: Foreign -> String
+
